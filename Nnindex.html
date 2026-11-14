@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HOLLOW HUB - Scripts e Executores</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #070b14;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(0, 136, 255, 0.2);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .logo { font-size: 20px; font-weight: 800; color: #0088FF; display: flex; align-items: center; gap: 8px; }
+  .nav-links { display: flex; gap: 10px; }
+  .nav-btn {
+    background: transparent; border: none; color: #94a3b8; font-size: 14px; font-weight: 600;
+    cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: 0.3s;
+  }
+  .nav-btn:hover, .nav-btn.active { background: rgba(0, 136, 255, 0.1); color: #0088FF; }
+
+  /* Container Principal */
+  .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+  .tab-content { display: none; animation: fadeIn 0.4s ease; }
+  .tab-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .page-title { font-size: 28px; font-weight: 800; margin-bottom: 20px; color: #fff; }
+  .page-sub { color: #94a3b8; margin-bottom: 30px; font-size: 14px; }
+
+  /* Grid de Cards */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .card {
+    background: #0f172a; border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px; padding: 20px; transition: 0.3s;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card:hover { transform: translateY(-5px); border-color: #0088FF; box-shadow: 0 10px 30px rgba(0, 136, 255, 0.1); }
+  .card-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+  .card-desc { font-size: 13px; color: #94a3b8; margin-bottom: 20px; line-height: 1.5; }
+  
+  .btn {
+    background: #0088FF; color: #fff; border: none; padding: 12px;
+    border-radius: 8px; font-weight: 700; cursor: pointer; text-align: center;
+    text-decoration: none; transition: 0.2s; display: block; width: 100%;
+  }
+  .btn:hover { background: #0070d4; }
+  .btn-outline { background: transparent; border: 1px solid #0088FF; color: #0088FF; }
+  .btn-outline:hover { background: rgba(0, 136, 255, 0.1); }
+
+  /* Painel ADM */
+  .admin-login {
+    background: #0f172a; padding: 30px; border-radius: 16px; text-align: center;
+    max-width: 400px; margin: 0 auto; border: 1px solid #0088FF;
+  }
+  .input-box {
+    width: 100%; padding: 14px; background: #070b14; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; color: #fff; margin-bottom: 15px; outline: none;
+  }
+  .input-box:focus { border-color: #0088FF; }
+
+  .admin-panel { display: none; }
+  .admin-panel.active { display: block; }
+  
+  .add-form {
+    background: #0f172a; padding: 20px; border-radius: 16px; margin-bottom: 30px;
+    border: 1px solid rgba(0, 136, 255, 0.3);
+  }
+  .add-form h3 { margin-bottom: 15px; color: #0088FF; }
+  .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  
+  .item-list { margin-top: 20px; }
+  .list-item {
+    background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-left: 3px solid #0088FF;
+  }
+  .btn-delete { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+
+  iframe { width: 100%; aspect-ratio: 16/9; border-radius: 12px; border: none; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">🛡️ HOLLOW HUB</div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="switchTab('scripts', this)">Scripts</button>
+    <button class="nav-btn" onclick="switchTab('videos', this)">Vídeos</button>
+    <button class="nav-btn" onclick="switchTab('executores', this)">Executores</button>
+    <button class="nav-btn" style="color: #f59e0b;" onclick="switchTab('admin', this)">⚙️ ADM</button>
+  </div>
+</nav>
+
+<div class="container">
+  
+  <!-- ABA SCRIPTS -->
+  <div id="tab-scripts" class="tab-content active">
+    <h1 class="page-title">Scripts Premium</h1>
+    <p class="page-sub">Baixe os melhores scripts atualizados para o seu executor</p>
+    <div class="grid" id="scripts-grid">
+      <!-- Os scripts vão aparecer aqui via JavaScript -->
+    </div>
+  </div>
+
+  <!-- ABA VÍDEOS -->
+  <div id="tab-videos" class="tab-content">
+    <h1 class="page-title">Tutoriais e Gameplays</h1>
+    <p class="page-sub">Aprenda a usar os scripts e veja os melhores momentos</p>
+    <div class="grid" id="videos-grid">
+      <!-- Os vídeos vão aparecer aqui via JavaScript -->
+    </div>
+  </div>
+
+  <!-- ABA EXECUTORES -->
+  <div id="tab-executores" class="tab-content">
+    <h1 class="page-title">Melhores Executores</h1>
+    <p class="page-sub">Programas para rodar os scripts no celular ou PC</p>
+    <div class="grid" id="executores-grid">
+      <!-- Os executores vão aparecer aqui via JavaScript -->
+    </div>
+  </div>
+
+  <!-- ABA ADM -->
+  <div id="tab-admin" class="tab-content">
+    
+    <!-- Tela de Login -->
+    <div id="admin-login" class="admin-login">
+      <h2 style="margin-bottom: 20px;">Acesso Restrito</h2>
+      <input type="password" id="admin-pass" class="input-box" placeholder="Digite a senha de ADM">
+      <button class="btn" onclick="loginAdmin()">Entrar no Painel</button>
+    </div>
+
+    <!-- Painel Aberto -->
+    <div id="admin-panel" class="admin-panel">
+      <h1 class="page-title" style="color: #f59e0b;">Painel Administrativo</h1>
+      <p class="page-sub">Adicione novos Scripts, Vídeos e Executores aqui</p>
+      
+      <!-- Formulário de Adição -->
+      <div class="add-form">
+        <h3>Adicionar Novo Item</h3>
+        <select id="adm-type" class="input-box" onchange="updateFormFields()">
+          <option value="script">Script</option>
+          <option value="video">Vídeo (YouTube)</option>
+          <option value="executor">Executor</option>
+        </select>
+        <input type="text" id="adm-title" class="input-box" placeholder="Nome do Item (Ex: Script MM2, Delta Executor)">
+        <input type="text" id="adm-desc" class="input-box" placeholder="Descrição curta">
+        <input type="text" id="adm-link" class="input-box" placeholder="Link (Link do script, ID do YouTube ou Link do Executor)">
+        <button class="btn" style="background: #10b981;" onclick="addItem()">Salvar Item</button>
+      </div>
+
+      <!-- Lista de Itens para Deletar -->
+      <div class="item-list">
+        <h3>Itens Adicionados (Clique para Deletar)</h3>
+        <div id="admin-list"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ==========================================
+  // CONFIGURAÇÃO DO SITE
+  // ==========================================
+  const ADMIN_PASSWORD = "davi102030"; // 🔑 SENHA CORRIGIDA (SEM O PONTO)
+  const STORAGE_PREFIX = "hollowhub_";
+
+  // Dados Padrão (Caso o navegador esteja limpo)
+  const defaultScripts = [
+    { id: 1, title: "GG MODS v69 (Premium)", desc: "Script completo com Aimbot, ESP, Hitbox e Auto Farm", link: "#" }
+  ];
+  const defaultVideos = [
+    { id: 1, title: "Como usar o GG MODS", desc: "Tutorial ensinando a colocar a key e executar", link: "dQw4w9WgXcQ" }
+  ];
+  const defaultExecutors = [
+    { id: 1, title: "Delta Executor", desc: "Melhor executor para celular Android", link: "https://delta-executor.com" }
+  ];
+
+  // Variáveis globais
+  let scripts = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'scripts')) || defaultScripts;
+  let videos = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'videos')) || defaultVideos;
+  let executores = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'executores')) || defaultExecutors;
+
+  // ==========================================
+  // SISTEMA DE NAVEGAÇÃO
+  // ==========================================
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById('tab-' + tabId).classList.add('active');
+    btn.classList.add('active');
+    
+    if (tabId === 'admin') checkAdminLogin();
+  }
+
+  // ==========================================
+  // RENDERIZAÇÃO DOS CARDS
+  // ==========================================
+  function renderAll() {
+    // Scripts
+    const scriptsGrid = document.getElementById('scripts-grid');
+    scriptsGrid.innerHTML = scripts.length ? '' : '<p style="color:#94a3b8">Nenhum script disponível</p>';
+    scripts.forEach(s => {
+      scriptsGrid.innerHTML += `
+        <div class="card">
+          <div>
+            <div class="card-title">${s.title}</div>
+            <div class="card-desc">${s.desc}</div>
+          </div>
+          <a href="${s.link}" target="_blank" class="btn">Baixar Script</a>
+        </div>
+      `;
+    });
+
+    // Vídeos
+    const videosGrid = document.getElementById('videos-grid');
+    videosGrid.innerHTML = videos.length ? '' : '<p style="color:#94a3b8">Nenhum vídeo disponível</p>';
+    videos.forEach(v => {
+      videosGrid.innerHTML += `
+        <div class="card" style="padding: 0; overflow: hidden; border: none;">
+          <iframe src="https://www.youtube.com/embed/${v.link}" allowfullscreen></iframe>
+          <div style="padding: 15px;">
+            <div class="card-title">${v.title}</div>
+            <div class="card-desc" style="margin-bottom: 0;">${v.desc}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    // Executores
+    const execGrid = document.getElementById('executores-grid');
+    execGrid.innerHTML = executores.length ? '' : '<p style="color:#94a3b8">Nenhum executor disponível</p>';
+    executores.forEach(e => {
+      execGrid.innerHTML += `
+        <div class="card">
+          <div>
+            <div class="card-title">${e.title}</div>
+            <div class="card-desc">${e.desc}</div>
+          </div>
+          <a href="${e.link}" target="_blank" class="btn btn-outline">Acessar Site</a>
+        </div>
+      `;
+    });
+  }
+
+  // ==========================================
+  // SISTEMA DO PAINEL ADM
+  // ==========================================
+  function checkAdminLogin() {
+    const isLogged = sessionStorage.getItem(STORAGE_PREFIX + 'admin_logged') === 'true';
+    if (isLogged) {
+      document.getElementById('admin-login').style.display = 'none';
+      document.getElementById('admin-panel').classList.add('active');
+      renderAdminList();
+    } else {
+      document.getElementById('admin-login').style.display = 'block';
+      document.getElementById('admin-panel').classList.remove('active');
+    }
+  }
+
+  function loginAdmin() {
+    const pass = document.getElementById('admin-pass').value;
+    if (pass === ADMIN_PASSWORD) {
+      sessionStorage.setItem(STORAGE_PREFIX + 'admin_logged', 'true');
+      checkAdminLogin();
+    } else {
+      alert('Senha incorreta');
+    }
+  }
+
+  function updateFormFields() {
+    const type = document.getElementById('adm-type').value;
+    const linkInput = document.getElementById('adm-link');
+    if (type === 'video') {
+      linkInput.placeholder = "Apenas o ID do YouTube (ex: dQw4w9WgXcQ)";
+    } else if (type === 'script') {
+      linkInput.placeholder = "Link do Pastebin, Raw ou Mediafire";
+    } else {
+      linkInput.placeholder = "Link do site do Executor";
+    }
+  }
+
+  function addItem() {
+    const type = document.getElementById('adm-type').value;
+    const title = document.getElementById('adm-title').value.trim();
+    const desc = document.getElementById('adm-desc').value.trim();
+    const link = document.getElementById('adm-link').value.trim();
+
+    if (!title || !desc || !link) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const newItem = { id: Date.now(), title, desc, link };
+
+    if (type === 'script') scripts.unshift(newItem);
+    if (type === 'video') videos.unshift(newItem);
+    if (type === 'executor') executores.unshift(newItem);
+
+    saveData();
+    document.getElementById('adm-title').value = '';
+    document.getElementById('adm-desc').value = '';
+    document.getElementById('adm-link').value = '';
+    alert('Adicionado com sucesso');
+  }
+
+  function deleteItem(type, id) {
+    if (type === 'script') scripts = scripts.filter(x => x.id !== id);
+    if (type === 'video') videos = videos.filter(x => x.id !== id);
+    if (type === 'executor') executores = executores.filter(x => x.id !== id);
+    saveData();
+  }
+
+  function saveData() {
+    localStorage.setItem(STORAGE_PREFIX + 'scripts', JSON.stringify(scripts));
+    localStorage.setItem(STORAGE_PREFIX + 'videos', JSON.stringify(videos));
+    localStorage.setItem(STORAGE_PREFIX + 'executores', JSON.stringify(executores));
+    renderAll();
+    renderAdminList();
+  }
+
+  function renderAdminList() {
+    const list = document.getElementById('admin-list');
+    list.innerHTML = '';
+    
+    function createListItem(type, item) {
+      return `
+        <div class="list-item">
+          <div>
+            <strong>[${type.toUpperCase()}]</strong> ${item.title}
+          </div>
+          <button class="btn-delete" onclick="deleteItem('${type}', ${item.id})">Apagar</button>
+        </div>
+      `;
+    }
+
+    scripts.forEach(s => list.innerHTML += createListItem('script', s));
+    videos.forEach(v => list.innerHTML += createListItem('video', v));
+    executores.forEach(e => list.innerHTML += createListItem('executor', e));
+
+    if(list.innerHTML === '') list.innerHTML = '<p style="color:#94a3b8;">Nenhum item salvo</p>';
+  }
+
+  // Inicialização
+  document.addEventListener('DOMContentLoaded', () => {
+    renderAll();
+    updateFormFields();
+  });
+
+</script>
+</body>
+  </html>
